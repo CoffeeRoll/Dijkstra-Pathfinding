@@ -1,4 +1,4 @@
-//Creates an N-dimentioanl array with the provided lengths
+/// Creates an N-dimentioanl array with the provided lengths
 function createArray(length) {
     var arr = new Array(length || 0),
         i = length;
@@ -13,6 +13,7 @@ function createArray(length) {
     return arr;
 }
 
+///A class implementing a directed graph
 class Graph {    
     constructor(size) {
         this._nodes = new Array(size);
@@ -33,7 +34,7 @@ class Graph {
         } 
     }
 
-    //Returns the index that the provided value is at in the array of nodes (-1 if not found)
+    ///Returns the index that the provided value is at in the array of nodes (-1 if not found)
     _getIndex(name) {
         for (var i = 0; i < this._nodes.length; i++) {
             if (name == this._nodes[i]) { return i; }
@@ -41,14 +42,14 @@ class Graph {
         return -1;
     }
 
-    //Determines if the Graph is full
+    ///Determines if the Graph is full
     IsFull() {
         let test = (this._numNodes == this._MAX_NODES);
         //console.log("IsFull: " + test);
         return test;
     }
 
-    //returns the index of the first empty node (-1 if full)
+    ///returns the index of the first empty node (-1 if full)
     _getNextIndex() {
         if(this.IsFull()) { return -1; }
 
@@ -60,7 +61,7 @@ class Graph {
         }
     }
     
-    //Adds a node to the graph with the provided name and returns true if it succeeded
+    ///Adds a node to the graph with the provided name and returns true if it succeeded
     AddNode(name) {
         if(!this.IsFull()){
             let tmp = this._getNextIndex();
@@ -73,7 +74,7 @@ class Graph {
         return false;
     }
 
-    //Removes a node from the Graph and returns true if the node was found and removed
+    ///Removes a node from the Graph and returns true if the node was found and removed
     RemoveNode(name) {
         var index = this._getIndex(name);
 
@@ -93,6 +94,7 @@ class Graph {
         return false;
     }
 
+    ///Adds an edge between two nodes with a given weight
     AddEdge(startNode, endNode, weight) {
         var fromIndex = this._getIndex(startNode);
         var toIndex = this._getIndex(endNode);
@@ -100,6 +102,7 @@ class Graph {
         this._edges[fromIndex][toIndex] = weight;
     }
 
+    ///Returns the weight between two nodes
     GetEdgeWeight(startNode, endNode) {
         var fromIndex = this._getIndex(startNode);
         var toIndex = this._getIndex(endNode);
@@ -107,6 +110,7 @@ class Graph {
         return this._edges[fromIndex][toIndex];
     }
     
+    ///Prints edge matrix data to the colsole
     PrintEdgeMatrix() {
         let mtrx = "";
         for (let y = 0; y < this._edges.length; y++) {
@@ -118,6 +122,7 @@ class Graph {
         console.log(mtrx);
     }
     
+    ///Prints the data from getMST to the console
     _printMSTData(data) {
         let text = "";
         
@@ -132,6 +137,7 @@ class Graph {
         console.log(text);
     }
     
+    ///Utility function used by getMST
     _minDistance(dist, mstSet) {
         let min = Infinity;
         let minIndex = 0;
@@ -145,10 +151,11 @@ class Graph {
         return minIndex;
     }
     
-    //Returns a 2D array where 
-    //[0] is the name of the node
-    //[1] is the path along the MST to the previous node
-    //[2] is the collective weight to get to this node from srcNode
+    /**Returns a 2D array where 
+    *  [0] is the name of the node
+    *  [1] is the path along the MST to the previous node
+    *  [2] is the collective weight to get to this node from srcNode
+    */
     getMST(srcNode) {
         var data = createArray(this._MAX_NODES, 3);
         var mstSet = new Array(this._MAX_NODES);
@@ -188,7 +195,7 @@ class Graph {
 
 
 var width = 10;
-var height = 10;
+var height = width;
 
 //Array of weights
 var grid = createArray(width, height);
@@ -202,6 +209,7 @@ var graph = new Graph(width * height);
 var firstButton = -1;
 var secondButton = -1;
 
+///Sets up the button values
 function setupGridValues() {
     for (var i = 0; i < grid.length; i++) {
         for (var w = 0; w < grid[i].length; w++) {
@@ -210,6 +218,7 @@ function setupGridValues() {
     }
 }
 
+///Removes all button_select, button_end, and button_start css classes and adds button_default 
 function clearPath() {
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
@@ -221,6 +230,7 @@ function clearPath() {
     }
 }
 
+///Sets the css classes for each button along the shortest path
 function drawPath() {
     var pathData = graph.getMST(firstButton);
     let index = secondButton;
@@ -233,19 +243,25 @@ function drawPath() {
         
         buttons[yPos][xPos].classList.remove('button_default');
         buttons[yPos][xPos].classList.add('button_select');
+        
+        //If first node
         if (index == pathData[index][1]) { break; }
+        
+        //update index
         index = pathData[index][1];
     }
     
+    //Change last button css class to button_end
     buttons[Math.floor(secondButton/width)][secondButton%width].classList.remove('button_select');
     buttons[Math.floor(secondButton/width)][secondButton%width].classList.add('button_end');
     
+    //Change first button css class to button_start
     buttons[yPos][xPos].classList.remove('button_select');
     buttons[yPos][xPos].classList.add('button_start');
     
 }
 
-//Keeps the most recently clicked buttons to draw a path with
+/// Keeps the most recently clicked buttons to draw a path with
 function buttonClick(pos) {
     if (firstButton == -1) {
         firstButton = (pos[1] * width) + pos[0];
@@ -263,7 +279,7 @@ function buttonClick(pos) {
     }
 }
 
-//Sets up buttons with an onclick event to call buttonClick(pos)
+/// Sets up a button grid with an onclick event to call buttonClick(pos)
 function setupButtons() {
     for (var i = 0; i < buttons.length; i++) {
         for (var w = 0; w < buttons[i].length; w++) {
