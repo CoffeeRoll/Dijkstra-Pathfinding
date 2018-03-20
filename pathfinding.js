@@ -187,21 +187,19 @@ class Graph {
                 }
             }
         }
-        
-        //this._printMSTData(data);
         return data;
     }
 }
 
 
-var width = 10;
-var height = width;
+var width = 25;
+var height = 15;
 
 //Array of weights
-var grid = createArray(width, height);
+var grid = createArray(height, width);
 
 //Array or buttons
-var buttons = createArray(width, height);
+var buttons = createArray(height, width);
 
 //Graph object
 var graph = new Graph(width * height);
@@ -222,10 +220,7 @@ function setupGridValues() {
 function clearPath() {
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            buttons[y][x].classList.remove('button_select');
-            buttons[y][x].classList.remove('button_end');
-            buttons[y][x].classList.remove('button_start');
-            buttons[y][x].classList.add('button_default');
+            buttons[y][x].className = 'button_default';
         }
     }
 }
@@ -241,8 +236,7 @@ function drawPath() {
         xPos = index % width;
         yPos = Math.floor(index / width);
         
-        buttons[yPos][xPos].classList.remove('button_default');
-        buttons[yPos][xPos].classList.add('button_select');
+        buttons[yPos][xPos].className = 'button_select';
         
         //If first node
         if (index == pathData[index][1]) { break; }
@@ -251,13 +245,14 @@ function drawPath() {
         index = pathData[index][1];
     }
     
+    let lastButtonXPos = secondButton%width;
+    let lastButtonYPos = Math.floor(secondButton/width);
+    
     //Change last button css class to button_end
-    buttons[Math.floor(secondButton/width)][secondButton%width].classList.remove('button_select');
-    buttons[Math.floor(secondButton/width)][secondButton%width].classList.add('button_end');
+    buttons[lastButtonYPos][lastButtonXPos].className = 'button_end';
     
     //Change first button css class to button_start
-    buttons[yPos][xPos].classList.remove('button_select');
-    buttons[yPos][xPos].classList.add('button_start');
+    buttons[yPos][xPos].className = 'button_start';
     
 }
 
